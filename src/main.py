@@ -23,8 +23,8 @@ async def main():
         if proxy_config and proxy_config.get('useApifyProxy'):
             groups = proxy_config.get('apifyProxyGroups', ['RESIDENTIAL'])
             group = groups[0] if groups else 'RESIDENTIAL'
-            env = await Actor.get_env()
-            proxy_password = env.get('proxy_password')
+            import os
+            proxy_password = os.getenv('APIFY_PROXY_PASSWORD')
             if proxy_password:
                 proxy_url = f'http://groups-{group}:{proxy_password}@proxy.apify.com:8000'
                 Actor.log.info(f'Using Apify proxy: {group}')
