@@ -35,7 +35,6 @@ def parse_job_listing(html, url):
                     'location': job.get('location', {}).get('label'),
                     'salary': job.get('salary', {}).get('label'),
                     'employmentType': job.get('employmentType'),
-                    'description': job.get('description', '')[:500],
                     'url': url,
                     'scrapedAt': None  # Will be set in main
                 }
@@ -64,17 +63,12 @@ def parse_job_listing(html, url):
     if location_elem:
         location = location_elem.get_text(strip=True)
     
-    # Extract description
-    desc_elem = soup.select_one('[data-at="job-description"], .job-description, article')
-    description = desc_elem.get_text(strip=True)[:500] if desc_elem else None
-    
     return {
         'title': title,
         'company': company,
         'location': location,
         'salary': salary,
         'employmentType': None,
-        'description': description,
         'url': url,
         'scrapedAt': None
     }
@@ -97,11 +91,13 @@ def parse_search_results(html):
                     job_url = f"https://www.stepstone.de{job_url}"
                 
                 jobs.append({
-                    'title': listing.get('title'),
-                    'company': listing.get('company', {}).get('name'),
-                    'location': listing.get('location', {}).get('label'),
-                    'salary': listing.get('salary', {}).get('label'),
-                    'url': job_url
+                    'title': listing.get('title') or '',
+                    'company': listing.get('company', {}).get('name') or '',
+                    'location': listing.get('location', {}).get('label') or '',
+                    'salary': listing.get('salary', {}).get('label') or '',
+                    'employmentType': listing.get('employmentType') or '',
+                    'url': job_url,
+                    'scrapedAt': ''
                 })
         except Exception as e:
             print(f"Error parsing search results from Next.js: {e}")
@@ -125,10 +121,12 @@ def parse_search_results(html):
             
             jobs.append({
                 'title': title_elem.get_text(strip=True),
-                'company': company_elem.get_text(strip=True) if company_elem else None,
-                'location': location_elem.get_text(strip=True) if location_elem else None,
-                'salary': None,
-                'url': job_url
+                'company': company_elem.get_text(strip=True) if company_elem else '',
+                'location': location_elem.get_text(strip=True) if location_elem else '',
+                'salary': '',
+                'employmentType': '',
+                'url': job_url,
+                'scrapedAt': ''
             })
     
     return jobs
