@@ -1,0 +1,41 @@
+{
+  "actorSpecification": 1,
+  "actorOutputSchemaVersion": 1,
+  "fields": {
+    "title": {
+      "type": "string",
+      "title": "Job Title",
+      "description": "Job title/position"
+    },
+    "company": {
+      "type": "string",
+      "title": "Company",
+      "description": "Company name"
+    },
+    "location": {
+      "type": "string",
+      "title": "Location",
+      "description": "Job location (city/region)"
+    },
+    "salary": {
+      "type": "string",
+      "title": "Salary",
+      "description": "Salary range (if listed)"
+    },
+    "employmentType": {
+      "type": "string",
+      "title": "Employment Type",
+      "description": "Employment type (e.g. Full-time)"
+    },
+    "url": {
+      "type": "string",
+      "title": "URL",
+      "description": "Direct link to job posting"
+    },
+    "scrapedAt": {
+      "type": "string",
+      "title": "Scraped At",
+      "description": "ISO timestamp when scraped"
+    }
+  }
+}
