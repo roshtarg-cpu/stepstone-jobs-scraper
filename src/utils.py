@@ -1,53 +1,47 @@
 """Utility functions for Stepstone scraper."""
-import re
-from urllib.parse import urlparse, parse_qs
-from camoufox.async_api import AsyncCamoufox
-
-
-def _parse_proxy(proxy_url):
-    """Parse Apify proxy URL into components."""
-    if not proxy_url:
-        return None
-    
-    parsed = urlparse(proxy_url)
-    return {
-        'server': f'{parsed.scheme}://{parsed.hostname}:{parsed.port}',
-        'username': parsed.username,
-        'password': parsed.password
-    }
+import httpx
+from urllib.parse import urlparse
 
 
 async def _fetch(url, proxy_url=None):
-    """Fetch a page using Camoufox with optional proxy."""
-    proxy_config = _parse_proxy(proxy_url) if proxy_url else None
+    """Fetch a page using httpx with headers and optional proxy."""
+    headers = {
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36',
+        'Accept': 'text/html,application/xhtml+xml,application/xml;q=0.9,*/*;q=0.8',
+        'Accept-Language': 'de-DE,de;q=0.9,en-US;q=0.8,en;q=0.7',
+        'Accept-Encoding': 'gzip, deflate, br',
+        'DNT': '1',
+        'Connection': 'keep-alive',
+        'Upgrade-Insecure-Requests': '1'
+    }
     
-    async with AsyncCamoufox(
-        headless=True,
-        geoip=True,
-        proxy=proxy_config
-    ) as browser:
-        page = await browser.new_page()
-        
+    proxies = None
+    if proxy_url:
+        proxies = {
+            'http://': proxy_url,
+            'https://': proxy_url
+        }
+    
+    async with httpx.AsyncClient(
+        headers=headers,
+        proxies=proxies,
+        timeout=30.0,
+        follow_redirects=True
+    ) as client:
         try:
-            response = await page.goto(
-                url,
-                wait_until='networkidle',
-                timeout=90000
-            )
-            
-            # Wait for content to load
-            await page.wait_for_timeout(3000)
-            
-            html = await page.content()
+            response = await client.get(url)
             
             # Check for valid response
-            if len(html) < 500:
+            if response.status_code != 200:
+                print(f"HTTP {response.status_code} for {url}")
                 return None
-                
-            return html
+            
+            if len(response.text) < 500:
+                print(f"Response too small ({len(response.text)} bytes)")
+                return None
+            
+            return response.text
             
         except Exception as e:
             print(f"Error fetching {url}: {e}")
             return None
-        finally:
-            await page.close()

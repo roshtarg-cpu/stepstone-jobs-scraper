@@ -3,7 +3,7 @@ import asyncio
 from datetime import datetime, timezone
 from apify import Actor
 from .utils import _fetch
-from .parser import parse_search_results, parse_job_listing
+from .parser import parse_search_results
 
 
 async def main():
@@ -28,10 +28,12 @@ async def main():
                 proxy_url = f'http://groups-{group}:{proxy_password}@proxy.apify.com:8000'
                 Actor.log.info(f'Using Apify proxy: {group}')
         
-        # Build search URL
-        search_url = f"https://www.stepstone.de/5/ergebnisseite.html?what={search_query.replace(' ', '+')}"
+        # Build search URL (modern Stepstone format)
+        search_term = search_query.replace(' ', '-').lower()
+        search_url = f"https://www.stepstone.de/jobs/{search_term}"
         if location:
-            search_url += f"&where={location.replace(' ', '+')}"
+            location_term = location.replace(' ', '-').lower()
+            search_url = f"https://www.stepstone.de/jobs/{search_term}/in-{location_term}"
         
         Actor.log.info(f'Search URL: {search_url}')
         
@@ -41,7 +43,10 @@ async def main():
         
         while results_scraped < max_results:
             # Paginate
-            page_url = f"{search_url}&page={page}"
+            if page == 1:
+                page_url = search_url
+            else:
+                page_url = f"{search_url}?page={page}"
             
             Actor.log.info(f'Fetching page {page}: {page_url}')
             
