@@ -17,14 +17,11 @@ async def _fetch(url, proxy_url=None):
     
     proxies = None
     if proxy_url:
-        proxies = {
-            'http://': proxy_url,
-            'https://': proxy_url
-        }
+        proxies = proxy_url  # httpx expects a string or dict mapping schemes
     
     async with httpx.AsyncClient(
         headers=headers,
-        proxies=proxies,
+        proxy=proxies,  # Changed from 'proxies' to 'proxy'
         timeout=30.0,
         follow_redirects=True
     ) as client:
