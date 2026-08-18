@@ -1,7 +1,7 @@
 {
   "actorSpecification": 1,
   "name": "stepstone-jobs-scraper",
-  "title": "Stepstone Jobs Scraper \u2014 German Job Board Data",
+  "title": "Stepstone Jobs Scraper — German Job Board Data",
   "description": "Extract job listings from Stepstone.de, Germany's leading job board with 50M+ monthly visitors. Get title, company, location, salary, and URLs. Works with Claude, ChatGPT, and AI agents via Apify MCP.",
   "version": "0.1",
   "buildTag": "latest",
@@ -9,5 +9,45 @@
   "readme": "./README.md",
   "storages": {
     "dataset": "./dataset_schema.json"
+  },
+  "output": {
+    "actorOutputSchemaVersion": 1,
+    "properties": {
+      "title": {
+        "type": "string",
+        "title": "Job Title",
+        "description": "Job title/position"
+      },
+      "company": {
+        "type": "string",
+        "title": "Company",
+        "description": "Company name"
+      },
+      "location": {
+        "type": "string",
+        "title": "Location",
+        "description": "Job location (city/region)"
+      },
+      "salary": {
+        "type": "string",
+        "title": "Salary",
+        "description": "Salary range (if listed)"
+      },
+      "employmentType": {
+        "type": "string",
+        "title": "Employment Type",
+        "description": "Employment type (e.g. Full-time)"
+      },
+      "url": {
+        "type": "string",
+        "title": "URL",
+        "description": "Direct link to job posting"
+      },
+      "scrapedAt": {
+        "type": "string",
+        "title": "Scraped At",
+        "description": "ISO timestamp when scraped"
+      }
+    }
   }
 }
