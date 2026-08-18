@@ -3,7 +3,7 @@
   "name": "stepstone-jobs-scraper",
   "title": "Stepstone Jobs Scraper \u2014 German Job Board Data",
   "description": "Extract job listings from Stepstone.de, Germany's leading job board with 50M+ monthly visitors. Get title, company, location, salary, and URLs. Works with Claude, ChatGPT, and AI agents via Apify MCP.",
-  "version": "0.2",
+  "version": "0.1",
   "buildTag": "latest",
   "dockerfile": "./Dockerfile",
   "readme": "./README.md",
