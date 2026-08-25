@@ -51,6 +51,13 @@ async def main():
             
             Actor.log.info(f'Fetching page {page}: {page_url}')
             
+            # Add human-like delay between pages
+            if page > 1:
+                import random
+                delay = random.uniform(2.0, 4.0)
+                Actor.log.info(f'Waiting {delay:.1f}s before next page...')
+                await asyncio.sleep(delay)
+            
             # Fetch with retries
             html = None
             for attempt in range(max_retries):
@@ -59,10 +66,10 @@ async def main():
                     if html:
                         break
                     Actor.log.warning(f'Empty response on attempt {attempt+1}/{max_retries}')
-                    await asyncio.sleep(2 ** attempt)  # Exponential backoff
+                    await asyncio.sleep(3 + (2 ** attempt))  # Longer backoff
                 except Exception as e:
                     Actor.log.error(f'Fetch attempt {attempt+1} failed: {e}')
-                    await asyncio.sleep(2 ** attempt)
+                    await asyncio.sleep(3 + (2 ** attempt))
             
             if not html:
                 Actor.log.error(f'Failed to fetch page {page} after {max_retries} attempts')
