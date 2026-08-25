@@ -1,7 +1,7 @@
 {
   "actorSpecification": 1,
   "name": "stepstone-jobs-scraper",
-  "title": "Stepstone Jobs Scraper — German Job Board Data",
+  "title": "Stepstone Jobs Scraper \u2014 German Job Market Data",
   "description": "Extract job listings from Stepstone.de, Germany's leading job board with 50M+ monthly visitors. Get title, company, location, salary, and URLs. Works with Claude, ChatGPT, and AI agents via Apify MCP.",
   "version": "0.1",
   "buildTag": "latest",
@@ -13,37 +13,66 @@
       "title": {
         "type": "string",
         "title": "Job Title",
-        "description": "Job title/position"
+        "description": "Job title/position",
+        "template": "{{{title}}}"
       },
       "company": {
         "type": "string",
         "title": "Company",
-        "description": "Company name"
+        "description": "Company name",
+        "template": "{{{company}}}"
       },
       "location": {
         "type": "string",
         "title": "Location",
-        "description": "Job location (city/region)"
+        "description": "Job location (city/region)",
+        "template": "{{{location}}}"
       },
       "salary": {
         "type": "string",
         "title": "Salary",
-        "description": "Salary range (if listed)"
+        "description": "Salary range (if listed)",
+        "template": "{{{salary}}}"
       },
       "employmentType": {
         "type": "string",
         "title": "Employment Type",
-        "description": "Employment type (e.g. Full-time)"
+        "description": "Employment type (e.g. Full-time)",
+        "template": "{{{employmentType}}}"
       },
       "url": {
         "type": "string",
         "title": "URL",
-        "description": "Direct link to job posting"
+        "description": "Direct link to job posting",
+        "template": "{{{url}}}"
       },
       "scrapedAt": {
         "type": "string",
         "title": "Scraped At",
-        "description": "ISO timestamp when scraped"
+        "description": "ISO timestamp when scraped",
+        "template": "{{{scrapedAt}}}"
+      }
+    }
+  },
+  "storages": {
+    "dataset": {
+      "actorSpecification": 1,
+      "fields": {},
+      "views": {
+        "overview": {
+          "title": "Results",
+          "transformation": {
+            "fields": [
+              "title",
+              "company",
+              "location",
+              "salary",
+              "employmentType",
+              "url",
+              "scrapedAt"
+            ]
+          }
+        }
       }
     }
   }
